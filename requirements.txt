@@ -1,0 +1,4 @@
+# Optional: only needed for `wechat_read.py --ocr-images`.
+# Text-only article reading uses the Python standard library.
+# Tested with rapidocr_onnxruntime 1.2.3.
+rapidocr_onnxruntime==1.2.3

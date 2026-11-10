@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Eval runs / private data
+evals/runs/
+out/
+wechat_images/
+_tmp*
+case.md
+cases/
+*.case.md
+*.log
+
+# Secrets
+.env
+.env.*
+*.key
+*.pem
+credentials.*
+cookies.*
