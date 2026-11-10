@@ -27,7 +27,7 @@
         "marks admission match as inferred/C, not direct",
         "does not treat OpenAlex ORCID as authoritative",
         "searches 科研招募 column via site: query",
-        "advisor grade B or better (A only with student-advisor direct page)",
+        "advisor grade B or better; A only with student-advisor direct page and 3-point match; only name = B/待核",
         "no private info"
       ],
       "files": []
@@ -62,7 +62,7 @@
       "id": 5,
       "name": "lead-check-wechat-images",
       "prompt": "我发你两篇公众号文章：一篇正文提到目标人物，另一篇正文没有提到、但获奖证书图片的名单里出现目标姓名。请判断哪篇相关。只根据这两篇，不要搜微信。",
-      "expected_output": "文章 1 match（正文，B/direct）；文章 2 必须 OCR 图片，发现证书名单中的姓名（B/direct），只读正文会漏；两篇都是学生活动报道，不是学术产出；门槛不通过；不查私人信息。",
+      "expected_output": "文章 1 match（正文，B/direct）；文章 2 必须 OCR 图片，发现证书名单中的姓名（B/direct），只读正文会漏；此 match 仅指文章相关性，不等于身份确认/A 级；两篇都是学生活动报道，不是学术产出；门槛不通过；不查私人信息。",
       "assertions": [
         "uses wechat_read.py --ocr-images",
         "article 1 match (text)",
@@ -96,6 +96,25 @@
         "asks for a strong key (institution/paper/ORCID/advisor)",
         "does not pick a random same-name person",
         "stops or asks instead of brute-forcing",
+        "no private info"
+      ],
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "supervisor-first-faculty-student-list",
+      "prompt": "帮我核验一位研究生（<学校> <学院>，<年级> 硕士，有公开论文 DOI <DOI>，署名单位 <学院>）的导师。不要继续按姓名硬搜；走“学院师资名录 → 导师研究方向 → 教师主页学生信息”这条线。",
+      "expected_output": "先拉学院师资页，按研究方向筛候选；再查学校教师主页系统（faculty.<域名>）的“学生信息”栏：某导师主页列出的在读硕士生中包含目标姓名，且 3 点吻合（姓名 + 至少 2 个独立佐证：学院/学位/年级/论文主题） → A 级；只有姓名 → B/待核；对照候选的学生栏名单中没有该姓名 → 不作为支持/降低优先级（不写排除）；用导师公开研究方向 + 课题组公开研究主题（聚合层面）+ 论文主题做吻合检查，方向吻合 + 官方导师主页/课题组页 → B 级支持；注明“在读”名单有时效性，缺席只降低优先级，不能单独当排除证据；不记录/比较/输出其他学生姓名或方向；不写人物简介。",
+      "assertions": [
+        "uses college faculty roster before name-hard-search",
+        "checks faculty.<domain> student-info section",
+        "finds the target name on a candidate's student list",
+        "marks direct name listing as A only with 3-point match",
+        "does not write absence as exclusion",
+        "uses research-direction fit as supporting, not proof",
+        "notes '在读' list may be stale",
+        "uses group research themes, not other students' names",
+        "does not record/compare/expose other students' names or directions",
         "no private info"
       ],
       "files": []

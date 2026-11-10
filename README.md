@@ -44,15 +44,15 @@
 | 文件 | 作用 |
 |---|---|
 | `SKILL.md` | 主技能：门槛、工作流、停止规则、隐私红线 |
-| `references/search-ladder.md` | 检索阶梯：DOI→ORCID、学校官网、名单交叉、导师佐证、工具路由、失败模式 |
+| `references/search-ladder.md` | 检索阶梯：DOI→ORCID、学校官网、名单交叉、导师佐证、导师反查、工具路由、失败模式 |
 | `references/output-template.md` | `case.md` / `lead_check` / `links-only` 模板 |
 | `references/guardrails.md` | 公开学者门槛、拒绝脚本、法律边界、自检清单 |
 | `references/human-in-the-loop.md` | 微信/公众号/截图的人工 scout 协议 |
 | `scripts/orcid_by_doi.py` | DOI → ORCID 查询（stdlib only） |
 | `scripts/wechat_read.py` | 公开公众号文章 → 标题/公众号/日期/正文；图片 OCR 可选（正文 stdlib，OCR 需 requirements.txt） |
 | `scripts/README.md` | 两个脚本的用途；探索期一次性探针为什么不包含 |
-| `evals/evals.json` | 行为测试模板（7 类场景，含负样本） |
-| `docs/eval-summary.md` | 第一轮 / 第二轮 eval 的去标识化摘要 |
+| `evals/evals.json` | 行为测试模板（8 类场景，含负样本） |
+| `docs/eval-summary.md` | 第一轮 / 第二轮 eval + 新增回归测试的去标识化摘要 |
 
 依赖：`orcid_by_doi.py` 与 `wechat_read.py` 的正文读取仅需 Python 3.9+；`--ocr-images` 需要 `pip install -r requirements.txt`（RapidOCR，锁定 1.2.3）。
 
@@ -62,6 +62,7 @@
 - `wechat_read.py --ocr-images` 能在公众号文章的**图片荣誉证书**里读到姓名；只读正文会漏。
 - 第一轮 6 条 eval：with-skill 6/6 通过；baseline 在“无公开产出/普通人/公众号图片”三类场景出现隐私、成本、OCR 失败。
 - 第二轮定向 eval：导师佐证从 D 升到 B；弱键题两边都停/问，区分度不足。
+- 导师反查：某学院师资页 → 按研究方向筛候选 → 学校教师主页“学生信息”栏直接列出目标姓名且 3 点吻合（姓名 + 至少 2 个独立佐证，A）；对照候选无该姓名（不作为支持/降低优先级，不写排除）；导师方向与论文主题吻合且有官方导师主页/课题组页佐证（B 级支持）。教训：学院官网简介通常不列学生，要另找 `faculty.<域名>` 教师主页系统；“在读”名单有滞后，缺席只降低优先级，不能单独当排除证据。
 
 详见 [`docs/eval-summary.md`](docs/eval-summary.md)。
 
@@ -76,7 +77,7 @@
 
 ## 状态
 
-v0（2026-11-10）。已跑 6 + 2 条 eval，但仍是草稿；没有正式 benchmark，也没有在多种学科上做通用性验证。
+v0（2026-11-10）。已跑 6 + 2 条手工 eval；`evals.json` 共 8 条，其中第 8 条 supervisor-first 待跑。仍是草稿；没有正式 benchmark，也没有在多种学科上做通用性验证。
 
 ## License
 
